@@ -12,7 +12,8 @@ From my analysis, three key issues were identified:
 
 ## Proposed Pipeline Improvements
 ### 1. Enhanced Data Model
-I propose adding a single table to track data quality issues, rather than completely restructuring the database:
+To address the identified issues without major changes to the existing schema, I recommend adding a dedicated data quality tracking table. 
+This non-invasive approach allows us to monitor and resolve data issues over time while maintaining compatibility with existing systems:
 ```sql
 -- New table to track data quality issues
 CREATE TABLE [Abrechnung_Data_Quality] (
@@ -47,7 +48,7 @@ def perform_validation_checks(invoices_df, positions_df, customers_df):
 
     # Rule I2: Invalid Customer reference (KdNr)
     inv_check_kdnr = invoices_df[invoices_df["KdNr"].notnull()]
-    invalid_kdnr_inv = inv_check_kdnr[~pd.to_numeric(inv_check_kdnr['KdNr']).isin(valid_customer_ids)]
+    invalid_kdnr_inv = inv_check_kdnr[~pd.to_numeric(inv_check_kdnr["KdNr"]).isin(valid_customer_ids)]
     for idx, row in invalid_kdnr_inv.iterrows():
          issues_list.append(f"Invoice {row.get('ReNummer', 'NaN')}: Invalid KdNr {row['KdNr']}.")
 
@@ -80,15 +81,13 @@ def perform_validation_checks(invoices_df, positions_df, customers_df):
 ```
 
 ### 3. ETL Process Improvements
-My approach focuses on enhancing the current ETL process with simple quality checks to the current available data:
+To improve the ETL process, my approach adds targeted quality checks to the existing process that identify and log three key issues, to the newly created table: 
+missing payments, placeholder media IDs, and empty invoices. This provides visibility into data problems without disrupting the current pipeline flow:
 ```python
-# Pseudo-code for data quality checks
-def run_data_quality_checks(conn):
-    """
-    Run data quality checks and log issues for review
-    """
+# Python snippet illustrating data quality checks
+def run_data_quality_checks(connection):
     # 1. Check for missing payment information
-    missing_payment_positions = conn.execute("""
+    missing_payment_positions = connection.execute("""
         SELECT AP.id, AP.ReId
         FROM Abrechnung_Positionen AP
         JOIN Abrechnung_Rechnungen AR ON AP.ReId = AR.ReNummer
@@ -97,29 +96,29 @@ def run_data_quality_checks(conn):
     
     # Log missing payment issues
     for position in missing_payment_positions:
-        conn.execute("""
+        connection.execute("""
             INSERT INTO Abrechnung_Data_Quality 
             (TableName, RecordId, IssueType, Notes)
             VALUES ('Abrechnung_Positionen', ?, 'missing_payment', 'Position linked to invoice without payment data')
         """, [position.id])
     
     # 2. Check for placeholder media
-    placeholder_positions = conn.execute("""
-        SELECT id, ReId, Nettobetrag 
+    placeholder_positions = connection.execute("""
+        SELECT id, ReId 
         FROM Abrechnung_Positionen
         WHERE Bildnummer = 100000000
     """).fetchall()
     
     # Log placeholder media issues
     for position in placeholder_positions:
-        conn.execute("""
+        connection.execute("""
             INSERT INTO Abrechnung_Data_Quality 
             (TableName, RecordId, IssueType, Notes)
             VALUES ('Abrechnung_Positionen', ?, 'placeholder_media', 'Position using placeholder media ID')
         """, [position.id])
     
     # 3. Check for invoices without positions
-    empty_invoices = conn.execute("""
+    empty_invoices = connection.execute("""
         SELECT AR.ReNummer
         FROM Abrechnung_Rechnungen AR
         LEFT JOIN Abrechnung_Positionen AP ON AP.ReId = AR.ReNummer
@@ -128,7 +127,7 @@ def run_data_quality_checks(conn):
     
     # Log empty invoice issues
     for invoice in empty_invoices:
-        conn.execute("""
+        connection.execute("""
             INSERT INTO Abrechnung_Data_Quality 
             (TableName, RecordId, IssueType, Notes)
             VALUES ('Abrechnung_Rechnungen', ?, 'empty_invoice', 'Invoice has no associated positions')
@@ -136,7 +135,8 @@ def run_data_quality_checks(conn):
 ```
 
 ### 4. Improved Views for Reporting
-To address the data quality issues in reporting without changing the core data model, I propose creating views that handle the problematic cases:
+To address data quality issues without modifying the core data structure, I propose creating database views that intelligently handle problematic cases. 
+These views will serve as a reliable data source for Tableau dashboards while maintaining consistency with existing reports:
 ```sql
 -- View for revenue reporting that handles missing payments
 CREATE VIEW [vw_Revenue_Complete] AS
@@ -181,8 +181,8 @@ LEFT JOIN
            ▼
 ┌─────────────────────┐
 │                     │
-│   Python Validation │
-│   Script            │
+│   Python Data       │
+│   Validation Script │
 │                     │
 └──────────┬──────────┘
            │
