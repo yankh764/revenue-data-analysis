@@ -52,7 +52,7 @@ Alternatively, you can use a database management tool like Azure Data Studio to 
 ### Data Loading
 With your virtual environment activated and database set up, run the data loader script to populate the database with the sample data:
 ```bash
-python -m src.data_loader
+python -m scripts.data_loader
 ```
 
 This script will read the CSV files from the `data` directory and load them into the corresponding tables in the database.
@@ -75,11 +75,11 @@ revenue-data-analysis/
 │   ├── invoices.csv      # Invoice data
 │   └── positions.csv     # Invoice line items
 ├── requirements.txt      # Python dependencies
-├── .env.example          # Template for database credentials
+├── .env.example          # Template for required environment variables (DB credenitals)
 ├── sql                   # SQL scripts
 │   ├── analysis.sql      # Analysis queries
 │   └── schema.sql        # Database schema definition
-└── src                   # Python source code
+└── scripts               # Python scripts
     ├── data_loader.py    # Script for loading data into database
     └── __init__.py
 ```
