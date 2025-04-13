@@ -1,0 +1,4 @@
+pandas         # Library for loading the CSV mock data
+sqlalchemy     # ORM library
+python-dotenv  # Library for loading .env files
+pymssql        # MSSQL drivers

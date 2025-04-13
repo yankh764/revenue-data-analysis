@@ -1,0 +1,85 @@
+# IMAGO Data Analysis
+This repository contains a data analysis solution for understanding revenue attribution issues in IMAGO's billing system. 
+The project analyzes invoice, position, and customer data to identify discrepancies and propose improvements to the existing data pipeline.
+
+## Setup Instructions
+### Prerequisites
+- Docker
+- Python 3.8+
+- Git
+
+### Getting Started
+1. Clone the repository:
+```bash
+git clone https://github.com/yankh764/imago-data-analysis.git
+cd imago-data-analysis
+```
+
+2. Create and activate a virtual environment:
+```bash
+python -m venv venv
+# Activate on macOS/Linux
+source venv/bin/activate
+```
+
+3. Install the required Python packages:
+```bash
+pip install -r requirements.txt
+```
+
+4. Create an `.env` file based on the provided `.env.example`:
+```bash
+cp .env.example .env
+```
+
+### Database Setup
+1. Pull and run the Microsoft SQL Server Docker image:
+```bash
+docker pull mcr.microsoft.com/mssql/server:latest
+docker run -v ./sql:/sql -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=SimplePassword123" \
+   -p 1433:1433 --name sql1 --hostname sql1 \
+   -d mcr.microsoft.com/mssql/server:latest
+```
+
+2. Create the database and required tables:
+```bash
+docker exec -it sql1 /opt/mssql-tools18/bin/sqlcmd -C \
+   -S localhost -U sa -P SimplePassword123 -i /sql/schema.sql
+```
+
+Alternatively, you can use a database management tool like Azure Data Studio to execute the SQL script.
+
+### Data Loading
+With your virtual environment activated and database set up, run the data loader script to populate the database with the sample data:
+```bash
+python -m src.data_loader
+```
+
+This script will read the CSV files from the `data` directory and load them into the corresponding tables in the database.
+
+
+### Running the Analysis Queries
+To run the analysis queries against your database:
+```bash
+docker exec -it sql1 /opt/mssql-tools18/bin/sqlcmd -C \
+   -S localhost -U sa -P SimplePassword123 -i /sql/analysis.sql
+```
+
+You can also run individual queries from the analysis.sql file using your preferred database client.
+
+## Project Structure
+```
+imago-data-analysis/
+├── data                  # Source CSV files
+│   ├── customers.csv     # Customer information
+│   ├── invoices.csv      # Invoice data
+│   └── positions.csv     # Invoice line items
+├── requirements.txt      # Python dependencies
+├── .env.example          # Template for database credentials
+├── sql                   # SQL scripts
+│   ├── analysis.sql      # Analysis queries
+│   └── schema.sql        # Database schema definition
+└── src                   # Python source code
+    ├── data_loader.py    # Script for loading data into database
+    └── __init__.py
+```
