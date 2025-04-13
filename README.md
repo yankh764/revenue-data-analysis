@@ -1,5 +1,5 @@
-# IMAGO Data Analysis
-This repository contains a data analysis solution for understanding revenue attribution issues in IMAGO's billing system. 
+# Revenue Data Analysis
+This repository contains a data analysis solution for understanding revenue attribution issues in a billing system. 
 The project analyzes invoice, position, and customer data to identify discrepancies and propose improvements to the existing data pipeline.
 
 ## Setup Instructions
@@ -11,8 +11,8 @@ The project analyzes invoice, position, and customer data to identify discrepanc
 ### Getting Started
 1. Clone the repository:
 ```bash
-git clone https://github.com/yankh764/imago-data-analysis.git
-cd imago-data-analysis
+git clone https://github.com/yankh764/revenue-data-analysis
+cd revenue-data-analysis
 ```
 
 2. Create and activate a virtual environment:
@@ -69,7 +69,7 @@ You can also run individual queries from the analysis.sql file using your prefer
 
 ## Project Structure
 ```
-imago-data-analysis/
+revenue-data-analysis/
 ├── data                  # Source CSV files
 │   ├── customers.csv     # Customer information
 │   ├── invoices.csv      # Invoice data
