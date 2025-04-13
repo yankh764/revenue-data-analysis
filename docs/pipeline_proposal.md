@@ -140,7 +140,7 @@ These views will serve as a reliable data source for Tableau dashboards while ma
 ```sql
 -- View for revenue reporting that handles missing payments
 CREATE VIEW [vw_Revenue_Complete] AS
-SELECT 
+SELECT
     AP.id AS PositionId,
     AP.ReId AS InvoiceId,
     AP.KdNr AS CustomerId,
@@ -150,23 +150,23 @@ SELECT
     AR.ReDatum AS InvoiceDate,
     AR.Zahlungsdatum AS PaymentDate,
     -- If payment data is missing, mark as 'Pending'
-    CASE 
+    CASE
         WHEN AR.Zahlungsdatum IS NULL THEN 'Pending'
         ELSE 'Paid'
     END AS PaymentStatus,
     -- Flag placeholder media for special handling
-    CASE 
+    CASE
         WHEN AP.Bildnummer = 100000000 THEN 'Placeholder'
         ELSE 'Actual'
     END AS MediaType,
-    K.Verlagsname AS CustomerName,
-    K.Region AS CustomerRegion
-FROM 
+    AK.Verlagsname AS CustomerName,
+    AK.Region AS CustomerRegion
+FROM
     Abrechnung_Positionen AP
-JOIN 
+JOIN
     Abrechnung_Rechnungen AR ON AP.ReId = AR.ReNummer
-LEFT JOIN 
-    Abrechnung_Kunden K ON AP.KdNr = K.Kdnr;
+LEFT JOIN
+    Abrechnung_Kunden AK ON AP.KdNr = AK.Kdnr;
 ```
 
 ## Solution Diagram

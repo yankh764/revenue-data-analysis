@@ -29,8 +29,8 @@ the payment date (`Zahlungsdatum`) or payment amount (`ZahlungsbetragBrutto`) is
 **SQL Query:**
 ```sql
 SELECT COUNT(*) AS count_positions_missing_payment
-FROM Abrechnung_Positionen AS AP
-JOIN Abrechnung_Rechnungen AS AR ON AP.ReId = AR.ReNummer
+FROM Abrechnung_Positionen AP
+JOIN Abrechnung_Rechnungen AR ON AP.ReId = AR.ReNummer
 WHERE AR.Zahlungsdatum IS NULL OR AR.ZahlungsbetragBrutto IS NULL;
 ```
 
@@ -56,8 +56,8 @@ where revenue might be recorded at the invoice level but not properly broken dow
 **SQL Query:**
 ```sql
 SELECT COUNT(*) AS count_invoices_missing_positions
-FROM Abrechnung_Rechnungen AS AR
-LEFT JOIN Abrechnung_Positionen AS AP ON AP.ReId = AR.ReNummer
+FROM Abrechnung_Rechnungen AR
+LEFT JOIN Abrechnung_Positionen AP ON AP.ReId = AR.ReNummer
 WHERE AP.id IS NULL;
 ```
 
