@@ -5,8 +5,8 @@ GO
 -- Execute analysis query
 WITH Faulty_Positions AS (
     SELECT COUNT(*) AS count_positions_missing_payment
-    FROM Abrechnung_Positionen AS AP
-    JOIN Abrechnung_Rechnungen AS AR ON AP.ReId = AR.ReNummer
+    FROM Abrechnung_Positionen AP
+    JOIN Abrechnung_Rechnungen AR ON AP.ReId = AR.ReNummer
     WHERE AR.Zahlungsdatum IS NULL OR AR.ZahlungsbetragBrutto IS NULL
 ),
 Placeholder_Media AS (
@@ -16,8 +16,8 @@ Placeholder_Media AS (
 ),
 Faulty_Invoices AS (
     SELECT COUNT(*) AS count_invoices_missing_positions
-    FROM Abrechnung_Rechnungen AS AR
-    LEFT JOIN Abrechnung_Positionen AS AP ON AP.ReId = AR.ReNummer
+    FROM Abrechnung_Rechnungen AR
+    LEFT JOIN Abrechnung_Positionen AP ON AP.ReId = AR.ReNummer
     WHERE AP.id IS NULL
 )
 SELECT *
