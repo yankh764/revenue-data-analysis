@@ -70,20 +70,20 @@ You can also run individual queries from the analysis.sql file using your prefer
 ## Project Structure
 ```
 revenue-data-analysis/
-├── docs                         # Documentation files for analysis and enhancement proposals
-│   ├── analysis_findings.md     # Data analysis findings
-│   ├── modern_tooling.md        # Modern tooling proposal
-│   └── pipeline_proposal.md     # Enhanced pipeline proposal
-├── data                         # Source CSV files (mock data)
-│   ├── customers.csv            # Customer information
-│   ├── invoices.csv             # Invoice data
-│   └── positions.csv            # Invoice line items
-├── scripts                      # Python scripts
-│   ├── data_loader.py           # Script for loading data into database
+├── docs                       # Documentation files for analysis and enhancement proposals
+│   ├── analysis_findings.md   # Data analysis findings
+│   ├── modern_tooling.md      # Modern tooling proposal
+│   └── pipeline_proposal.md   # Enhanced pipeline proposal
+├── data                       # Source CSV files (mock data)
+│   ├── customers.csv          # Customer information
+│   ├── invoices.csv           # Invoice data
+│   └── positions.csv          # Invoice line items
+├── scripts                    # Python scripts
+│   ├── data_loader.py         # Script for loading data into database
 │   └── __init__.py       
-├── sql                          # SQL scripts
-│   ├── analysis.sql             # Analysis queries
-│   └── schema.sql               # Database schema definition
-├── requirements.txt             # Python dependencies
-└── .env.example                 # Template for required environment variables (DB credenitals)
+├── sql                        # SQL scripts
+│   ├── analysis.sql           # Analysis queries
+│   └── schema.sql             # Database schema definition
+├── requirements.txt           # Python dependencies
+└── .env.example               # Template for required environment variables (DB credenitals)
 ```
