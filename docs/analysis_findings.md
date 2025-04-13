@@ -17,6 +17,8 @@ I used SQL queries against the relational tables to identify three key issues me
 2. Revenue attributed to placeholder media IDs
 3. Invoices with no associated positions
 
+The full SQL analysis query can be found [here](../sql/analysis.sql).
+
 ## Key Findings
 ### 1. Missing Payment Information
 **Finding:** 18,011 position records are linked to invoices that have missing payment information.
