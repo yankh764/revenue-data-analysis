@@ -8,7 +8,7 @@ I analyzed three connected datasets representing the invoice system:
 
 - `invoices.csv` - Main invoice records (Abrechnung_Rechnungen)
 - `positions.csv` - Line items for each invoice (Abrechnung_Positionen)
-- `customers.csv` - Customer information lookup table
+- `customers.csv` - Customer information lookup table (Abrechnung_Kunden)
 
 ## Analysis Approach
 I used SQL queries against the relational tables to identify three key issues mentioned in the challenge requirements:
