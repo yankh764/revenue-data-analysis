@@ -129,26 +129,41 @@ def perform_position_checks(
     return issues_list
 
 
+def print_discovered_issues(issues: list[str], top: int = 10) -> None:
+    """Prints a sample of discovered validation issue messages.
+
+    If the issues list is not empty, it prints up to a specified number
+    ('top') of the individual issue messages, each prefixed with its
+    rank number. Does nothing if the list is empty.
+
+    Args:
+        issues: A list of strings, where each string is a validation issue message.
+        top: The maximum number of individual issue messages to print. Defaults to 10.
+    """
+    print(f"Finished data validation process, {len(issues)} potential issues were identified")
+
+    if issues:
+        actual_top = min(top, len(issues))
+        for i in range(actual_top):
+            print(f"#{i + 1}: {issues[i]}")
+
+
 def perform_validation_checks(
         invoices_df: pd.DataFrame,
         positions_df: pd.DataFrame,
         customers_df: pd.DataFrame
-) -> list[str]:
-    """Orchestrates the validation process across all related DataFrames.
+) -> None:
+    """Orchestrates the validation process and prints findings.
 
-    Builds sets of valid IDs from customer and invoice data, then calls
-    specific validation functions for invoices and positions to aggregate
-    all identified issues.
+    Builds sets of valid IDs from customer and invoice data, calls specific
+    validation functions, prints status updates during the process, reports
+    the total number of issues found, and prints a sample of the issues using
+    print_discovered_issues. This function does not return the list of issues.
 
     Args:
         invoices_df: DataFrame with invoice data.
         positions_df: DataFrame with position data.
         customers_df: DataFrame with customer data.
-
-    Returns:
-        A list of strings, where each string describes a specific validation
-        issue found across all checks. Returns an empty list if no issues
-        are found.
     """
     all_issues = []
     # --- Prepare lookup sets ---
@@ -159,33 +174,16 @@ def perform_validation_checks(
         pd.to_numeric(invoices_df["ReNummer"], errors="coerce").dropna().astype(int)
     )
 
+    print("Performing validation checks:")
+
+    print("Validating invoices data...")
     invoice_issues = perform_invoice_checks(invoices_df, valid_customer_ids)
     all_issues.extend(invoice_issues)
+    print("Validating positions data...")
     position_issues = perform_position_checks(positions_df, valid_invoice_ids, valid_customer_ids)
     all_issues.extend(position_issues)
 
-    return all_issues
-
-
-def print_discovered_issues(issues: list[str], top: int = 10) -> None:
-    """Prints a summary and a sample of discovered validation issues.
-
-    Outputs the total number of issues found. If issues exist, it prints
-    up to a specified number ('top') of the individual issue messages,
-    each prefixed with its rank number. If no issues are found, it prints
-    a corresponding message.
-
-    Args:
-        issues: A list of strings, where each string is a validation issue message.
-        top: The maximum number of individual issue messages to print. Defaults to 10.
-    """
-    if issues:
-        actual_top = min(top, len(issues))
-        print(f"Validation identified {len(issues)} potential issues, printing top {actual_top}:")
-        for i in range(actual_top):
-            print(f"#{i + 1}: {issues[i]}")
-    else:
-        print("No issues identified by simple validation.")
+    print_discovered_issues(all_issues)
 
 
 def main() -> None:
@@ -199,7 +197,6 @@ def main() -> None:
     data_encoding = "iso-8859-1"  # Support for special German characters
 
     try:
-        print("Starting data validation...")
         invoices_df = read_csv(TABLES_MAP["invoices"], data_encoding)
         print(f"Read {len(invoices_df)} rows from '{TABLES_MAP['invoices']}'")
 
@@ -209,9 +206,7 @@ def main() -> None:
         customers_df = read_csv(TABLES_MAP["customers"], data_encoding)
         print(f"Read {len(customers_df)} rows from '{TABLES_MAP['customers']}'")
 
-        print("Performing validation checks...")
-        results = perform_validation_checks(invoices_df, positions_df, customers_df)
-        print_discovered_issues(results)
+        perform_validation_checks(invoices_df, positions_df, customers_df)
     except Exception as err:
         print(f"Error: {err}", file=sys.stderr)
         sys.exit(1)
