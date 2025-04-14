@@ -29,7 +29,7 @@ CREATE TABLE [Abrechnung_Data_Quality] (
 ```
 
 ### 2. Upstream Data Validation
-To prevent bad data from entering the system in the first place, I propose implementing a Python validation script that runs before data is loaded into the database:
+To prevent bad data from entering the system in the first place, I propose implementing a Python validation script that run as a pre-processing step before the SSIS package execution:
 ```python
 # Python snippet illustrating core data validation checks
 import pandas as pd
