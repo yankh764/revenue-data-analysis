@@ -50,7 +50,7 @@ def perform_validation_checks(invoices_df, positions_df, customers_df):
     inv_check_kdnr = invoices_df[invoices_df["KdNr"].notnull()]
     invalid_kdnr_inv = inv_check_kdnr[~pd.to_numeric(inv_check_kdnr["KdNr"]).isin(valid_customer_ids)]
     for idx, row in invalid_kdnr_inv.iterrows():
-         issues_list.append(f"Invoice {row.get('ReNummer', 'NaN')}: Invalid KdNr {row['KdNr']}.")
+        issues_list.append(f"Invoice {row.get('ReNummer', 'NaN')}: Invalid KdNr {row['KdNr']}.")
 
     # --- Position Checks ---
     # Rule P1: Missing Invoice reference (ReId)
@@ -61,13 +61,13 @@ def perform_validation_checks(invoices_df, positions_df, customers_df):
     pos_check_reid = positions_df[positions_df["ReId"].notnull()]
     invalid_reid_pos = pos_check_reid[~pd.to_numeric(pos_check_reid["ReId"]).isin(valid_invoice_ids)]
     for idx, row in invalid_reid_pos.iterrows():
-         issues_list.append(f"Position {row.get('id', 'NaN')}: Invalid ReId {row['ReId']}.")
+        issues_list.append(f"Position {row.get('id', 'NaN')}: Invalid ReId {row['ReId']}.")
 
     # Rule P3: Invalid Customer reference (KdNr)
     pos_check_kdnr = positions_df[positions_df["KdNr"].notnull()]
     invalid_kdnr_pos = pos_check_kdnr[~pd.to_numeric(pos_check_kdnr["KdNr"]).isin(valid_customer_ids)]
     for idx, row in invalid_kdnr_pos.iterrows():
-         issues_list.append(f"Position {row.get('id', 'NaN')}: Invalid KdNr {row['KdNr']}.")
+        issues_list.append(f"Position {row.get('id', 'NaN')}: Invalid KdNr {row['KdNr']}.")
 
     # Rule P4: Placeholder Media ID (Warning)
     placeholders = positions_df[pd.to_numeric(positions_df["Bildnummer"]) == 100000000]
