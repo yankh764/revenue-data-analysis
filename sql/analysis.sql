@@ -17,7 +17,7 @@ Placeholder_Media AS (
 Faulty_Invoices AS (
     SELECT COUNT(*) AS count_invoices_missing_positions
     FROM Abrechnung_Rechnungen AR
-    LEFT JOIN Abrechnung_Positionen AP ON AP.ReId = AR.ReNummer
+    LEFT JOIN Abrechnung_Positionen AP ON AR.ReNummer = AP.ReId
     WHERE AP.id IS NULL
 )
 SELECT *

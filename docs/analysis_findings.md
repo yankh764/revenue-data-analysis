@@ -57,7 +57,7 @@ where revenue might be recorded at the invoice level but not properly broken dow
 ```sql
 SELECT COUNT(*) AS count_invoices_missing_positions
 FROM Abrechnung_Rechnungen AR
-LEFT JOIN Abrechnung_Positionen AP ON AP.ReId = AR.ReNummer
+LEFT JOIN Abrechnung_Positionen AP ON AR.ReNummer = AP.ReId
 WHERE AP.id IS NULL;
 ```
 

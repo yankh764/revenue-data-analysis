@@ -65,7 +65,7 @@ def perform_validation_checks(invoices_df, positions_df, customers_df):
 
     # Rule P3: Invalid Customer reference (KdNr)
     pos_check_kdnr = positions_df[positions_df["KdNr"].notnull()]
-    invalid_kdnr_pos = pos_check_kdnr[~pd.to_numeric(pos_check_kdnr['KdNr']).isin(valid_customer_ids)]
+    invalid_kdnr_pos = pos_check_kdnr[~pd.to_numeric(pos_check_kdnr["KdNr"]).isin(valid_customer_ids)]
     for idx, row in invalid_kdnr_pos.iterrows():
          issues_list.append(f"Position {row.get('id', 'NaN')}: Invalid KdNr {row['KdNr']}.")
 
@@ -81,14 +81,14 @@ def perform_validation_checks(invoices_df, positions_df, customers_df):
 ```
 
 ### 3. ETL Process Improvements
-To improve the ETL process, my approach adds targeted quality checks to the existing process that identify and log three key issues, to the newly created table: 
+To improve the ETL process, my approach adds targeted quality checks to the existing process that identify and log three key issues to the newly created table: 
 missing payments, placeholder media IDs, and empty invoices. This provides visibility into data problems without disrupting the current pipeline flow:
 ```python
 # Python snippet illustrating data quality checks
 def run_data_quality_checks(connection):
     # 1. Check for missing payment information
     missing_payment_positions = connection.execute("""
-        SELECT AP.id, AP.ReId
+        SELECT AP.id
         FROM Abrechnung_Positionen AP
         JOIN Abrechnung_Rechnungen AR ON AP.ReId = AR.ReNummer
         WHERE AR.Zahlungsdatum IS NULL OR AR.ZahlungsbetragBrutto IS NULL
@@ -104,7 +104,7 @@ def run_data_quality_checks(connection):
     
     # 2. Check for placeholder media
     placeholder_positions = connection.execute("""
-        SELECT id, ReId 
+        SELECT id 
         FROM Abrechnung_Positionen
         WHERE Bildnummer = 100000000
     """).fetchall()
@@ -121,7 +121,7 @@ def run_data_quality_checks(connection):
     empty_invoices = connection.execute("""
         SELECT AR.ReNummer
         FROM Abrechnung_Rechnungen AR
-        LEFT JOIN Abrechnung_Positionen AP ON AP.ReId = AR.ReNummer
+        LEFT JOIN Abrechnung_Positionen AP ON AR.ReNummer = AP.ReId
         WHERE AP.id IS NULL
     """).fetchall()
     
@@ -173,7 +173,7 @@ LEFT JOIN
 ```
 ┌─────────────────────┐
 │                     │
-│   Legacy Systems    │
+│  Legacy Systems     │
 │  (Access/Excel/Word)│
 │                     │
 └──────────┬──────────┘

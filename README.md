@@ -72,8 +72,8 @@ You can also run individual queries from the analysis.sql file using your prefer
 revenue-data-analysis/
 ├── docs                       # Documentation files for analysis and enhancement proposals
 │   ├── analysis_findings.md   # Data analysis findings
-│   ├── modern_tooling.md      # Modern tooling proposal
-│   └── pipeline_proposal.md   # Enhanced pipeline proposal
+│   ├── pipeline_proposal.md   # Enhanced data pipeline proposal
+│   └── modern_tooling.md      # Modern tooling proposal (optional)
 ├── data                       # Source CSV files (mock data)
 │   ├── customers.csv          # Customer information
 │   ├── invoices.csv           # Invoice data
@@ -82,8 +82,10 @@ revenue-data-analysis/
 │   ├── data_loader.py         # Script for loading data into database
 │   └── __init__.py       
 ├── sql                        # SQL scripts
-│   ├── analysis.sql           # Analysis queries
-│   └── schema.sql             # Database schema definition
+│   ├── schema.sql             # Database schema definition
+│   ├── analysis.sql           # Data analysis queries
+│   ├── quality.sql            # Data quality table (proposal)
+│   └── view.sql               # Data report view (proposal)
 ├── requirements.txt           # Python dependencies
 └── .env.example               # Template for required environment variables (DB credenitals)
 ```
