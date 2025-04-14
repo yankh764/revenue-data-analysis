@@ -79,8 +79,10 @@ revenue-data-analysis/
 │   ├── invoices.csv           # Invoice data
 │   └── positions.csv          # Invoice line items
 ├── scripts                    # Python scripts
+│   ├── __init__.py            # Script for loading data into database
 │   ├── data_loader.py         # Script for loading data into database
-│   └── __init__.py       
+│   ├── data_quality.py        # Script for checking and reporting data quality (proposal)
+│   └── data_validator.py      # Script for simple preprocessing and data validation (proposal)
 ├── sql                        # SQL scripts
 │   ├── schema.sql             # Database schema definition
 │   ├── analysis.sql           # Data analysis queries
